@@ -1,10 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet, Text } from 'react-native';
+
+import { Colors } from '@/constants/theme';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={Colors.gradients.home} // Purplish Gradient
+      style={styles.container}
+    >
       <Text style={styles.text}>Home Screen</Text>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -17,5 +23,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#fff',
   },
 });

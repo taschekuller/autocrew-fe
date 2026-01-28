@@ -2,88 +2,126 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, View, useColorScheme } from 'react-native';
+
+import { Colors } from '@/constants/theme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const theme = Colors[colorScheme ?? 'light'];
 
-  // Colors
-  const activeColor = isDark ? '#fff' : '#000';
-  const inactiveColor = isDark ? '#888' : '#666';
-  const backgroundColor = isDark ? 'rgba(0,0,0,0.5)' : 'rgba(178, 178, 178, 0.5)';
+  const renderTabBarBackground = () => (
+    <BlurView
+      intensity={80}
+      tint={colorScheme === 'dark' ? 'dark' : 'light'}
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          borderRadius: 30,
+          overflow: 'hidden',
+          backgroundColor: theme.tabBarBackground,
+        },
+      ]}
+      experimentalBlurMethod='dimezisBlurView'
+    />
+  );
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: activeColor,
-        tabBarInactiveTintColor: inactiveColor,
+        tabBarActiveTintColor: theme.tabIconSelected,
+        tabBarInactiveTintColor: theme.tabIconDefault,
         headerShown: true,
-        tabBarStyle: styles.tabBar,
-        tabBarBackground: () => (
-          <BlurView
-            intensity={80}
-            tint={isDark ? 'dark' : 'light'}
-            style={StyleSheet.absoluteFill}
-            experimentalBlurMethod='dimezisBlurView'
-          />
-        ),
-        tabBarItemStyle: styles.tabBarItem,
+        tabBarShowLabel: true,
+        tabBarStyle: {
+            position: 'absolute',
+            bottom: 25,
+            left: 0,
+            right: 0,
+            marginHorizontal: '5%', // 90% width
+            height: 60,
+            borderRadius: 30,
+            borderTopWidth: 0,
+            elevation: 0, // Remove shadow on Android
+            shadowColor: '#000', // Shadow for iOS
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 10,
+            backgroundColor: 'transparent', // Let BlurView show through
+        },
+        tabBarBackground: renderTabBarBackground,
+        tabBarItemStyle: {
+            paddingTop: 8,
+            paddingBottom: 8,
+        }
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Ionicons size={24} name="home" color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon focused={focused} name="home" color={color} indicatorColor={theme.indicator} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <Ionicons size={24} name="person" color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon focused={focused} name="person" color={color} indicatorColor={theme.indicator} />
+          ),
         }}
       />
       <Tabs.Screen
         name="my-car"
         options={{
           title: 'My Car',
-          tabBarIcon: ({ color }) => <Ionicons size={24} name="car" color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon focused={focused} name="car" color={color} indicatorColor={theme.indicator} />
+          ),
         }}
       />
       <Tabs.Screen
         name="service-points"
         options={{
           title: 'Service Points',
-          tabBarIcon: ({ color }) => <Ionicons size={24} name="map" color={color} />,
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon focused={focused} name="map" color={color} indicatorColor={theme.indicator} />
+          ),
         }}
       />
     </Tabs>
   );
 }
 
+function TabBarIcon({
+  name,
+  color,
+  focused,
+  indicatorColor,
+}: {
+  name: React.ComponentProps<typeof Ionicons>['name'];
+  color: string;
+  focused: boolean;
+  indicatorColor: string;
+}) {
+  return (
+    <View style={[styles.iconContainer, focused && { backgroundColor: indicatorColor }]}>
+      <Ionicons size={24} name={name} color={color} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  tabBar: {
-    position: 'absolute',
-    bottom: 25,
-    left: 20,
-    right: 20,
-    height: 60,
-    borderRadius: 30,
-    borderTopWidth: 0,
-    elevation: 0, // Remove shadow on Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    overflow: 'hidden', // Required for BlurView to respect borderRadius on some versions
-    backgroundColor: 'transparent', // Let BlurView show through
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  tabBarItem: {
-    paddingTop: 8,
-    paddingBottom: 8,
-  }
 });

@@ -14,6 +14,11 @@ export const Colors = {
     backgroundElement: '#F0F0F3',
     backgroundSelected: '#E0E1E6',
     textSecondary: '#60646C',
+    tint: '#0a7ea4',
+    tabIconDefault: '#687076',
+    tabIconSelected: '#0a7ea4',
+    tabBarBackground: 'rgba(255, 255, 255, 0.5)',
+    indicator: '#e5e5e5',
   },
   dark: {
     text: '#ffffff',
@@ -21,6 +26,17 @@ export const Colors = {
     backgroundElement: '#212225',
     backgroundSelected: '#2E3135',
     textSecondary: '#B0B4BA',
+    tint: '#fff',
+    tabIconDefault: '#9BA1A6',
+    tabIconSelected: '#fff',
+    tabBarBackground: 'rgba(0, 0, 0, 0.5)',
+    indicator: '#333333',
+  },
+  gradients: {
+    home: ['#8E2DE2', '#4A00E0'] as const,
+    profile: ['#00c6ff', '#0072ff'] as const,
+    myCar: ['#f12711', '#f5af19'] as const,
+    servicePoints: ['#11998e', '#38ef7d'] as const,
   },
 } as const;
 

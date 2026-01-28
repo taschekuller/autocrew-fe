@@ -1,10 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet, Text } from 'react-native';
+
+import { Colors } from '@/constants/theme';
 
 export default function MyCarScreen() {
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={Colors.gradients.myCar} // Orange/Red Gradient
+      style={styles.container}
+    >
       <Text style={styles.text}>My Car Screen</Text>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -17,5 +23,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#fff',
   },
 });
