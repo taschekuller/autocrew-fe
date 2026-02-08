@@ -8,17 +8,29 @@ const { width } = Dimensions.get('window');
 
 export default function OnboardingScreen() {
   const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('register');
 
   const contentOpacity = useSharedValue(1);
   const titleTranslateY = useSharedValue(0);
 
   const handleGetStarted = () => {
+    setAuthMode('register');
     contentOpacity.value = withTiming(0, { duration: 500 });
     titleTranslateY.value = withTiming(-50, { duration: 500 });
 
     // Show auth sheet after a small delay
     setTimeout(() => {
       setShowAuth(true);
+    }, 500);
+  };
+
+  const handleLogin = () => {
+    setAuthMode('login');
+    contentOpacity.value = withTiming(0, { duration: 500 });
+    titleTranslateY.value = withTiming(-50, { duration: 500 });
+
+    setTimeout(() => {
+        setShowAuth(true);
     }, 500);
   };
 
@@ -58,9 +70,13 @@ export default function OnboardingScreen() {
             <TouchableOpacity style={styles.button} onPress={handleGetStarted} activeOpacity={0.8}>
             <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin} activeOpacity={0.8}>
+                <Text style={styles.loginButtonText}>Already have an account? Log In</Text>
+            </TouchableOpacity>
         </Animated.View>
 
-        <AuthSheet visible={showAuth} onClose={handleCloseAuth} />
+        <AuthSheet visible={showAuth} onClose={handleCloseAuth} initialMode={authMode} />
       </ImageBackground>
     </View>
   );
@@ -129,5 +145,15 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 18,
     fontWeight: '700',
+  },
+  loginButton: {
+      marginTop: 20,
+      padding: 10,
+      alignSelf: 'center',
+  },
+  loginButtonText: {
+      color: 'rgba(255,255,255,0.8)',
+      fontSize: 16,
+      fontWeight: '600',
   },
 });

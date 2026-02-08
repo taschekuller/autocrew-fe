@@ -8,22 +8,102 @@ const ONBOARDING_KEY = 'onboarding_completed';
 // Mock Configuration
 console.log('Mock Auth configured');
 
+const API_URL = 'http://localhost:3000'; // Use 10.0.2.2 for Android Emulator, localhost for iOS
+
 export const signInWithGoogle = async () => {
-  console.log('Mocking Google Sign In...');
-  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
-  // Return a mock user object or token
-  const mockToken = 'mock-google-token-123';
-  await SecureStore.setItemAsync(TOKEN_KEY, mockToken);
-  return { data: { idToken: mockToken, user: { name: 'Mock User', email: 'mock@gmail.com' } } };
+  // In a real app, you'd get the token from Google SDK first
+  // const { idToken } = await GoogleSignIn.signIn();
+  const mockGoogleToken = 'mock-google-token-from-sdk';
+
+  try {
+    const response = await fetch(`${API_URL}/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: mockGoogleToken }),
+    });
+
+    if (!response.ok) throw new Error('Google Sign-In failed');
+
+    // Assuming backend returns token/user in body, adjust based on actual response
+    // const data = await response.json();
+    // await SecureStore.setItemAsync(TOKEN_KEY, data.token);
+
+    const mockToken = 'mock-jwt-from-backend';
+    await SecureStore.setItemAsync(TOKEN_KEY, mockToken);
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const signInWithApple = async () => {
-  console.log('Mocking Apple Sign In...');
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  const mockToken = 'mock-apple-token-456';
-  await SecureStore.setItemAsync(TOKEN_KEY, mockToken);
-  return { identityToken: mockToken, email: 'mock@icloud.com' };
+    // const credential = await AppleAuthentication.signInAsync(...);
+    const mockAppleToken = 'mock-apple-token-from-sdk';
+
+    try {
+        const response = await fetch(`${API_URL}/auth/apple`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identityToken: mockAppleToken, firstName: 'John', lastName: 'Doe' }),
+        });
+
+        if (!response.ok) throw new Error('Apple Sign-In failed');
+
+        const mockToken = 'mock-jwt-from-backend';
+        await SecureStore.setItemAsync(TOKEN_KEY, mockToken);
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
+
+export const loginWithEmail = async (email: string, password: string) => {
+    try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Login failed');
+        }
+
+        // Assuming 201 Created and maybe returns token?
+        // Docs say 201 No links, implying maybe just success?
+        // Usually login returns a token. For now, mocking token storage on success.
+        const mockToken = 'mock-jwt-from-backend';
+        await SecureStore.setItemAsync(TOKEN_KEY, mockToken);
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const registerWithEmail = async (email: string, password: string, name: string) => {
+    try {
+        const response = await fetch(`${API_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, name }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Registration failed');
+        }
+
+        return { success: true };
+    } catch (error) {
+         console.error(error);
+         throw error;
+    }
+};
+
 
 export const signOut = async () => {
   await SecureStore.deleteItemAsync(TOKEN_KEY);
@@ -33,22 +113,44 @@ export const getSession = async () => {
   return await SecureStore.getItemAsync(TOKEN_KEY);
 };
 
+export const getProfile = async () => {
+    try {
+        const token = await getSession();
+        if (!token) return null;
+
+        // If using mock, return mock data
+        if (token.startsWith('mock-')) {
+             return { name: 'Demo User', email: 'demo@autocrew.com' };
+        }
+
+        const response = await fetch(`${API_URL}/auth/profile`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                await signOut();
+                return null;
+            }
+            throw new Error('Failed to fetch profile');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        return null; // Return null gracefully so UI can handle it (e.g., show login or placeholder)
+    }
+};
+
 export const setOnboardingCompleted = async () => {
-  // User requested "do not need for now, user can see again and again"
-  // So we effectively do nothing or maybe set it but our check will ignore it?
-  // Let's set it just in case, but we can change the check to ignore it if needed.
-  // Actually, to strictly follow "user can see again and again", we might want to NOT set this,
-  // OR change hasCompletedOnboarding to return false.
-  // For now, I'll store it but I will modify hasCompletedOnboarding to return false as requested.
   await SecureStore.setItemAsync(ONBOARDING_KEY, 'true');
 };
 
 export const hasCompletedOnboarding = async () => {
-  // "do not need for now, user can see again and again"
-  // Always return false so the user is always redirected to Onboarding on reload
+  // Always return false as requested for testing
   return false;
-
-  // Original logic:
-  // const value = await SecureStore.getItemAsync(ONBOARDING_KEY);
-  // return value === 'true';
 };

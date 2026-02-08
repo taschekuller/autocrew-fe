@@ -4,6 +4,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 
+import ProfileHeader from '@/components/ProfileHeader';
 import { Colors } from '@/constants/theme';
 
 export default function TabLayout() {
@@ -32,6 +33,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: theme.tabIconSelected,
         tabBarInactiveTintColor: theme.tabIconDefault,
         headerShown: true,
+        headerRight: () => <ProfileHeader />,
         tabBarShowLabel: true,
         tabBarStyle: {
           position: 'absolute',
