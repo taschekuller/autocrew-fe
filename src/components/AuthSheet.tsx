@@ -2,6 +2,8 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { loginWithEmail, registerWithEmail, setOnboardingCompleted, signInWithApple, signInWithGoogle } from '../utils/auth';
+import { GoogleLoginButton } from './GoogleLoginButton';
+import { AppleLoginButton } from './AppleLoginButton';
 
 interface AuthSheetProps {
   visible: boolean;
@@ -133,13 +135,31 @@ export default function AuthSheet({ visible, onClose, initialMode = 'register' }
         </View>
 
         <View style={styles.socialButtons}>
-          <TouchableOpacity style={styles.appleButton} onPress={handleAppleSignIn}>
-            <Text style={styles.appleButtonText}>Apple</Text>
-          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <AppleLoginButton
+              onSuccess={async () => {
+                await setOnboardingCompleted();
+                router.replace('/(tabs)');
+              }}
+              onError={(error: any) => {
+                console.error('Apple Sign-In failed', error);
+                setError('Apple Sign-In failed');
+              }}
+            />
+          </View>
 
-          <TouchableOpacity style={styles.googleButton} onPress={handleGoogleSignIn}>
-            <Text style={styles.googleButtonText}>Google</Text>
-          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <GoogleLoginButton
+              onSuccess={async () => {
+                await setOnboardingCompleted();
+                router.replace('/(tabs)');
+              }}
+              onError={(error: any) => {
+                console.error('Google Sign-In failed', error);
+                setError('Google Sign-In failed');
+              }}
+            />
+          </View>
         </View>
 
         <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
