@@ -8,7 +8,8 @@
     "scheme": "autocrewfe",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.autocrew"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.autocrew"
     },
     "web": {
       "output": "static",
@@ -35,7 +37,9 @@
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      "expo-secure-store",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true,

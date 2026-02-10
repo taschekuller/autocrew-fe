@@ -4,11 +4,12 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 
+import ProfileHeader from '@/components/ProfileHeader';
 import { Colors } from '@/constants/theme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const theme = Colors[colorScheme ?? 'light'];
+  const theme = Colors[colorScheme === 'dark' ? 'dark' : 'light'];
 
   const renderTabBarBackground = () => (
     <BlurView
@@ -22,7 +23,7 @@ export default function TabLayout() {
           backgroundColor: theme.tabBarBackground,
         },
       ]}
-      experimentalBlurMethod='dimezisBlurView'
+      experimentalBlurMethod="dimezisBlurView"
     />
   );
 
@@ -32,38 +33,45 @@ export default function TabLayout() {
         tabBarActiveTintColor: theme.tabIconSelected,
         tabBarInactiveTintColor: theme.tabIconDefault,
         headerShown: true,
+        headerRight: () => <ProfileHeader />,
         tabBarShowLabel: true,
         tabBarStyle: {
-            position: 'absolute',
-            bottom: 25,
-            left: 0,
-            right: 0,
-            marginHorizontal: '5%', // 90% width
-            height: 60,
-            borderRadius: 30,
-            borderTopWidth: 0,
-            elevation: 0, // Remove shadow on Android
-            shadowColor: '#000', // Shadow for iOS
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.1,
-            shadowRadius: 10,
-            backgroundColor: 'transparent', // Let BlurView show through
+          position: 'absolute',
+          bottom: 25,
+          left: 0,
+          right: 0,
+          marginHorizontal: '5%', // 90% width
+          height: 60,
+          borderRadius: 30,
+          borderTopWidth: 0,
+          elevation: 0, // Remove shadow on Android
+          shadowColor: '#000', // Shadow for iOS
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 10,
+          backgroundColor: 'transparent', // Let BlurView show through
         },
         tabBarBackground: renderTabBarBackground,
         tabBarItemStyle: {
-            paddingTop: 8,
-            paddingBottom: 8,
-        }
-      }}>
+          paddingTop: 8,
+          paddingBottom: 8,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon focused={focused} name="home" color={color} indicatorColor={theme.indicator} />
+            <TabBarIcon
+              focused={focused}
+              name="home"
+              color={color}
+              indicatorColor={theme.indicator}
+            />
           ),
         }}
       />
@@ -72,7 +80,12 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon focused={focused} name="person" color={color} indicatorColor={theme.indicator} />
+            <TabBarIcon
+              focused={focused}
+              name="person"
+              color={color}
+              indicatorColor={theme.indicator}
+            />
           ),
         }}
       />
@@ -81,7 +94,12 @@ export default function TabLayout() {
         options={{
           title: 'My Car',
           tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon focused={focused} name="car" color={color} indicatorColor={theme.indicator} />
+            <TabBarIcon
+              focused={focused}
+              name="car"
+              color={color}
+              indicatorColor={theme.indicator}
+            />
           ),
         }}
       />
@@ -90,7 +108,12 @@ export default function TabLayout() {
         options={{
           title: 'Service Points',
           tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon focused={focused} name="map" color={color} indicatorColor={theme.indicator} />
+            <TabBarIcon
+              focused={focused}
+              name="map"
+              color={color}
+              indicatorColor={theme.indicator}
+            />
           ),
         }}
       />
