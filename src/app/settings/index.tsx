@@ -91,7 +91,7 @@ export default function SettingsScreen() {
             activeOpacity={0.7}
         >
             <View style={styles.itemContent}>
-                <View style={[styles.iconContainer, { backgroundColor: item.destructive ? theme.error + '20' : theme.accent + '30' }]}>
+                <View style={[styles.iconContainer, { backgroundColor: item.destructive ? theme.error + '20' : 'transparent' }]}>
                     <Ionicons
                         name={item.icon as any}
                         size={20}
