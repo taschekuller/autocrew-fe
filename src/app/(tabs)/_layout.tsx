@@ -70,7 +70,7 @@ export default function TabLayout() {
               focused={focused}
               name="home"
               color={color}
-              indicatorColor={theme.indicator}
+              indicatorColor={theme.accent}
             />
           ),
         }}
@@ -84,7 +84,7 @@ export default function TabLayout() {
               focused={focused}
               name="map"
               color={color}
-              indicatorColor={theme.indicator}
+              indicatorColor={theme.accent}
             />
           ),
         }}
@@ -98,7 +98,7 @@ export default function TabLayout() {
               focused={focused}
               name="car"
               color={color}
-              indicatorColor={theme.indicator}
+              indicatorColor={theme.accent}
             />
           ),
         }}
@@ -112,7 +112,7 @@ export default function TabLayout() {
               focused={focused}
               name="person"
               color={color}
-              indicatorColor={theme.indicator}
+              indicatorColor={theme.accent}
             />
           ),
         }}
@@ -135,7 +135,7 @@ function TabBarIcon({
 }) {
   return (
     <View style={[styles.iconContainer, focused && { backgroundColor: indicatorColor }]}>
-      <Ionicons size={24} name={name} color={color} />
+      <Ionicons size={24} name={name} color={focused ? '#2f2e32' : color} />
     </View>
   );
 }

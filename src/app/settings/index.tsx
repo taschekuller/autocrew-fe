@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, SectionList } from 'react-native';
-import { useAuth } from '../../hooks/useAuth';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, SectionList, Platform } from 'react-native';
+import { useAuth } from '@/hooks/useAuth';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@/hooks/use-theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SettingsScreen() {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const router = useRouter();
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const handleLogout = () => {
     Alert.alert(
@@ -33,6 +37,7 @@ export default function SettingsScreen() {
     label: string;
     action: () => void;
     destructive?: boolean;
+    value?: string;
   }
 
   interface Section {
@@ -44,59 +49,84 @@ export default function SettingsScreen() {
     {
       title: 'Account',
       data: [
-        { id: 'profile', icon: 'person-outline', label: 'Edit Profile', action: () => {} },
-        { id: 'notifications', icon: 'notifications-outline', label: 'Notifications', action: () => {} },
-        { id: 'privacy', icon: 'lock-closed-outline', label: 'Privacy', action: () => {} },
+        { id: 'profile', icon: 'person', label: 'Personal Information', action: () => {} },
+        { id: 'notifications', icon: 'notifications', label: 'Notifications', action: () => {} },
+        { id: 'privacy', icon: 'lock-closed', label: 'Privacy & Security', action: () => {} },
       ],
     },
     {
       title: 'Support',
       data: [
-        { id: 'help', icon: 'help-circle-outline', label: 'Help & Support', action: () => {} },
-        { id: 'about', icon: 'information-circle-outline', label: 'About', action: () => {} },
+         { id: 'help', icon: 'help-circle', label: 'Help & Support', action: () => {} },
+         { id: 'about', icon: 'information-circle', label: 'About', action: () => {}, value: 'v1.0.0' },
       ],
     },
     {
       title: 'Actions',
       data: [
-         { id: 'logout', icon: 'log-out-outline', label: 'Log Out', action: handleLogout, destructive: true },
+         { id: 'logout', icon: 'log-out', label: 'Log Out', action: handleLogout, destructive: true },
       ]
     }
   ];
 
+  const renderSectionHeader = ({ section: { title } }: { section: { title: string } }) => (
+    <Text style={[styles.sectionHeader, { color: theme.textSecondary }]}>{title.toUpperCase()}</Text>
+  );
+
+  const renderItem = ({ item, index, section }: { item: SettingItem, index: number, section: Section }) => {
+    const isFirst = index === 0;
+    const isLast = index === section.data.length - 1;
+
+    return (
+      <View style={{ paddingHorizontal: 16 }}>
+        <TouchableOpacity
+            style={[
+                styles.itemContainer,
+                { backgroundColor: theme.surface },
+                isFirst && styles.itemFirst,
+                isLast && styles.itemLast,
+                !isLast && { borderBottomWidth: 0.5, borderBottomColor: theme.border }
+            ]}
+            onPress={item.action}
+            activeOpacity={0.7}
+        >
+            <View style={styles.itemContent}>
+                <View style={[styles.iconContainer, { backgroundColor: item.destructive ? theme.error + '20' : theme.accent + '30' }]}>
+                    <Ionicons
+                        name={item.icon as any}
+                        size={20}
+                        color={item.destructive ? theme.error : theme.text}
+                    />
+                </View>
+                <Text style={[styles.itemLabel, { color: item.destructive ? theme.error : theme.text }]}>
+                    {item.label}
+                </Text>
+            </View>
+
+            <View style={styles.itemRight}>
+                {item.value && <Text style={[styles.itemValue, { color: theme.textSecondary }]}>{item.value}</Text>}
+                {!item.destructive && (
+                    <Ionicons name="chevron-forward" size={16} color={theme.textSecondary} style={{ opacity: 0.5 }} />
+                )}
+            </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <SectionList
         sections={sections}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={item.action}
-            activeOpacity={0.7}
-          >
-            <View style={styles.itemLeft}>
-              <Ionicons
-                name={item.icon as any}
-                size={22}
-                color={item.destructive ? '#FF3B30' : '#007AFF'}
-              />
-              <Text style={[styles.itemLabel, item.destructive && styles.destructiveLabel]}>
-                {item.label}
-              </Text>
-            </View>
-            {!item.destructive && (
-              <Ionicons name="chevron-forward" size={20} color="#C7C7CC" />
-            )}
-          </TouchableOpacity>
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title.toUpperCase()}</Text>
-        )}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        contentContainerStyle={styles.listContent}
+        renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        // SectionSeparatorComponent={() => <View style={{ height: 10 }} />}
+        contentContainerStyle={[
+            styles.listContent,
+            { paddingBottom: insets.bottom + 20 }
+        ]}
         stickySectionHeadersEnabled={false}
-        initialNumToRender={20}
       />
     </View>
   );
@@ -105,42 +135,55 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
   },
   listContent: {
     paddingVertical: 20,
   },
   sectionHeader: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     fontSize: 13,
     fontWeight: '600',
-    color: '#8E8E93',
-    marginBottom: 4,
+    marginBottom: 8,
+    marginTop: 24,
+    marginLeft: 32, // Indent to align with card content
   },
-  item: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+  itemContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
-  itemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  itemFirst: {
+      borderTopLeftRadius: 16,
+      borderTopRightRadius: 16,
+  },
+  itemLast: {
+      borderBottomLeftRadius: 16,
+      borderBottomRightRadius: 16,
+      marginBottom: 8,
+  },
+  itemContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+  },
+  iconContainer: {
+      width: 32,
+      height: 32,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
   },
   itemLabel: {
-    fontSize: 17,
-    color: '#000000',
-    marginLeft: 12,
+    fontSize: 16,
+    fontWeight: '500',
   },
-  destructiveLabel: {
-    color: '#FF3B30',
+  itemRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
   },
-  separator: {
-    height: 1, // StyleSheet.hairlineWidth might be too thin for some preferences but usually better
-    backgroundColor: '#C6C6C8',
-    marginLeft: 50, // Indent separator to align with text
+  itemValue: {
+      fontSize: 16,
   },
 });

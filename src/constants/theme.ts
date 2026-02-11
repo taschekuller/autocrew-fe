@@ -7,30 +7,42 @@ import '@/global.css';
 
 import { Platform } from 'react-native';
 
+import { Colors as Pallete } from './Colors';
+
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-    tint: '#0a7ea4',
+    text: Pallete.light.text,
+    background: Pallete.light.background,
+    backgroundElement: Pallete.light.surface,
+    backgroundSelected: '#E0E1E6', // Keeping existing or updating if needed
+    textSecondary: Pallete.light.textSecondary,
+    tint: Pallete.light.accent,
     tabIconDefault: '#687076',
-    tabIconSelected: '#0a7ea4',
+    tabIconSelected: Pallete.light.accent, // Using accent for active tab
     tabBarBackground: 'rgba(255, 255, 255, 0.5)',
     indicator: '#e5e5e5',
+    // New design tokens
+    surface: Pallete.light.surface,
+    accent: Pallete.light.accent,
+    border: Pallete.light.border,
+    error: Pallete.light.error,
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
+    text: Pallete.dark.text,
+    background: Pallete.dark.background,
+    backgroundElement: Pallete.dark.surface,
     backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-    tint: '#fff',
+    textSecondary: Pallete.dark.textSecondary,
+    tint: Pallete.dark.accent,
     tabIconDefault: '#9BA1A6',
-    tabIconSelected: '#fff',
+    tabIconSelected: Pallete.dark.accent,
     tabBarBackground: 'rgba(0, 0, 0, 0.5)',
     indicator: '#333333',
+    // New design tokens
+    surface: Pallete.dark.surface,
+    accent: Pallete.dark.accent,
+    border: Pallete.dark.border,
+    error: Pallete.dark.error,
   },
   gradients: {
     home: ['#8E2DE2', '#4A00E0'] as const,

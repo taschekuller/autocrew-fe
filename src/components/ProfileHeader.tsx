@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { getProfile, signOut } from '../utils/auth';
 
 export default function ProfileHeader() {
@@ -37,9 +37,10 @@ export default function ProfileHeader() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.push('/(tabs)/profile')}>
-        <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{getInitials(profile?.name || profile?.email)}</Text>
-        </View>
+        <Image
+          source={{ uri: `https://ui-avatars.com/api/?name=${profile?.name || 'User'}&background=random&color=fff` }}
+          style={styles.avatar}
+        />
       </TouchableOpacity>
     </View>
   );
