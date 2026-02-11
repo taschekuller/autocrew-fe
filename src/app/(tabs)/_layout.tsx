@@ -76,13 +76,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="service-points"
         options={{
-          title: 'Profile',
+          title: 'Service Points',
           tabBarIcon: ({ focused, color }) => (
             <TabBarIcon
               focused={focused}
-              name="person"
+              name="map"
               color={color}
               indicatorColor={theme.indicator}
             />
@@ -103,20 +103,21 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="service-points"
+            <Tabs.Screen
+        name="profile"
         options={{
-          title: 'Service Points',
+          title: 'Profile',
           tabBarIcon: ({ focused, color }) => (
             <TabBarIcon
               focused={focused}
-              name="map"
+              name="person"
               color={color}
               indicatorColor={theme.indicator}
             />
           ),
         }}
       />
+
     </Tabs>
   );
 }
