@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { loginWithEmail, registerWithEmail, setOnboardingCompleted, signInWithApple, signInWithGoogle } from '../utils/auth';
+import { useAuth } from '../hooks/useAuth';
 import { GoogleLoginButton } from './GoogleLoginButton';
 import { AppleLoginButton } from './AppleLoginButton';
 
@@ -33,16 +34,19 @@ export default function AuthSheet({ visible, onClose, initialMode = 'register' }
 
   if (!visible) return null;
 
+  const { login, register } = useAuth();
+
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
     try {
         if (mode === 'login') {
-            await loginWithEmail(email, password);
+            await login(email, password);
         } else {
-            await registerWithEmail(email, password, name);
-            // Auto login after register? Or just proceed?
-            // Assuming successful register logs you in or we can proceed.
+            await register(email, password, name);
+            // If register is successful, maybe auto login?
+            // For now, let's just login
+            await login(email, password);
         }
         await setOnboardingCompleted();
         router.replace('/(tabs)');

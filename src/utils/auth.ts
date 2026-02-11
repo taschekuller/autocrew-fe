@@ -12,7 +12,19 @@ const ONBOARDING_KEY = 'onboarding_completed';
 //   offlineAccess: true,
 // });
 
-const API_URL = 'http://localhost:3000'; // Use 10.0.2.2 for Android Emulator, localhost for iOS
+import Constants from 'expo-constants';
+
+const getApiUrl = () => {
+    if (__DEV__) {
+        const hostUri = Constants.expoConfig?.hostUri;
+        if (hostUri) {
+            return `http://${hostUri.split(':')[0]}:3000`;
+        }
+    }
+    return 'http://localhost:3000'; // Fallback
+};
+
+const API_URL = getApiUrl();
 
 export const signInWithGoogle = async () => {
     console.log('Mocking Google Sign-In');
@@ -101,10 +113,11 @@ export const signInWithApple = async () => {
 
 export const loginWithEmail = async (email: string, password: string) => {
     try {
+        const normalizedEmail = email.toLowerCase();
         const response = await fetch(`${API_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email: normalizedEmail, password }),
         });
 
         if (!response.ok) {
@@ -123,10 +136,11 @@ export const loginWithEmail = async (email: string, password: string) => {
 
 export const registerWithEmail = async (email: string, password: string, name: string) => {
     try {
+        const normalizedEmail = email.toLowerCase();
         const response = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, name }),
+            body: JSON.stringify({ email: normalizedEmail, password, name }),
         });
 
         if (!response.ok) {

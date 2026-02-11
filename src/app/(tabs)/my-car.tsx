@@ -1,16 +1,13 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, Text } from 'react-native';
-
-import { Colors } from '@/constants/theme';
+import { StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function MyCarScreen() {
+  const theme = useTheme();
+
   return (
-    <LinearGradient
-      colors={Colors.gradients.myCar} // Orange/Red Gradient
-      style={styles.container}
-    >
-      <Text style={styles.text}>My Car Screen</Text>
-    </LinearGradient>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.text, { color: theme.text }]}>My Car Screen</Text>
+    </View>
   );
 }
 
@@ -23,6 +20,5 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
   },
 });

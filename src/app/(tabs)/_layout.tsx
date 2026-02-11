@@ -70,35 +70,7 @@ export default function TabLayout() {
               focused={focused}
               name="home"
               color={color}
-              indicatorColor={theme.indicator}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon
-              focused={focused}
-              name="person"
-              color={color}
-              indicatorColor={theme.indicator}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="my-car"
-        options={{
-          title: 'My Car',
-          tabBarIcon: ({ focused, color }) => (
-            <TabBarIcon
-              focused={focused}
-              name="car"
-              color={color}
-              indicatorColor={theme.indicator}
+              indicatorColor={theme.accent}
             />
           ),
         }}
@@ -112,11 +84,40 @@ export default function TabLayout() {
               focused={focused}
               name="map"
               color={color}
-              indicatorColor={theme.indicator}
+              indicatorColor={theme.accent}
             />
           ),
         }}
       />
+      <Tabs.Screen
+        name="my-car"
+        options={{
+          title: 'My Car',
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon
+              focused={focused}
+              name="car"
+              color={color}
+              indicatorColor={theme.accent}
+            />
+          ),
+        }}
+      />
+            <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ focused, color }) => (
+            <TabBarIcon
+              focused={focused}
+              name="person"
+              color={color}
+              indicatorColor={theme.accent}
+            />
+          ),
+        }}
+      />
+
     </Tabs>
   );
 }
@@ -134,7 +135,7 @@ function TabBarIcon({
 }) {
   return (
     <View style={[styles.iconContainer, focused && { backgroundColor: indicatorColor }]}>
-      <Ionicons size={24} name={name} color={color} />
+      <Ionicons size={24} name={name} color={focused ? '#2f2e32' : color} />
     </View>
   );
 }
